@@ -26,34 +26,46 @@ class formController {
         };
     };
 
-    //getAllForm thu viec
+    //getAllForm thu viec + check dueDate
     async getFormType0(req, res, next) {
         try {
             let Form = await form.findAll({
                 where: { type: 0, status: 'close' },
                 include: formDetail
             });
+            let data = [];
+            for (let a of Form) {
+                if ((Date.parse(a.dueDate) - Date.now()) > 0) {
+                    data.push(a);
+                }
+            };
             res.status(200).json({
                 status: 'success',
-                result: Form.length,
-                data: { Form }
+                result: data.length,
+                data: { data }
             })
         } catch (err) {
             res.json(err);
         };
     };
 
-    //getAllForm đanh gia dinh ki hang nam
+    //getAllForm đanh gia dinh ki hang nam + check dueDate
     async getFormType1(req, res, next) {
         try {
             let Form = await form.findAll({
                 where: { type: 1, status: 'close' },
                 include: formDetail
             });
+            let data = [];
+            for (let a of Form) {
+                if ((Date.parse(a.dueDate) - Date.now()) > 0) {
+                    data.push(a);
+                }
+            };
             res.status(200).json({
                 status: 'success',
-                result: Form.length,
-                data: { Form }
+                result: data.length,
+                data: { data }
             })
         } catch (err) {
             res.json(err);
@@ -65,7 +77,7 @@ class formController {
     async HRGetStatusForm(req, res, next) {
         try {
             let Form = await form.findAll({
-                where: { complete: 1 },
+                where: { status: 'submitted', complete: 1 },
                 include: formDetail
             });
             res.status(200).json({
@@ -170,6 +182,7 @@ class formController {
             });
             res.status(200).json({
                 status: 'success',
+                result: Form.length,
                 data: { Form }
             })
         } catch (err) {
@@ -230,19 +243,14 @@ class formController {
         }
     };
 
-    //updateOneForm + formdetail
+    //UserUpdateOneForm + formdetail
     async updateOneForm(req, res, next) {
         let t = await db.dataBase.transaction();
         const id = req.params.id;
         try {
             await form.update({
-                userid: req.body.userid,
                 content: req.body.content,
                 status: req.body.status,
-                dueDate: req.body.dueDate,
-                isDeleted: req.body.isDeleted,
-                createBy: req.body.createBy,
-                updateaBy: req.body.updateaBy,
                 updateAt: Date.now()
             }, {
                 where: {
@@ -254,10 +262,6 @@ class formController {
             let FormDetail = req.body.formDetail;
             await formDetail.update({
                 content: FormDetail.content,
-                managerComment: FormDetail.managerComment,
-                isDeleted: FormDetail.isDeleted,
-                createBy: FormDetail.createBy,
-                updateaBy: FormDetail.updateaBy,
                 updateAt: Date.now()
             }, {
                 where: {
@@ -299,27 +303,6 @@ class formController {
         }
     };
 
-    //check dueDate
-    async checkDueDate(req, res, next) {
-        try {
-            let Form = await form.findAll({
-                include: formDetail
-            });
-            let data = [];
-            for (let a of Form) {
-                if ((Date.parse(a.dueDate) - Date.now()) > 0) {
-                    data.push(a);
-                }
-            };
-            res.json({
-                status: 'Success',
-                result: data.length,
-                data: data
-            });
-        } catch (err) {
-            res.json(err);
-        };
-    };
 
 }
 

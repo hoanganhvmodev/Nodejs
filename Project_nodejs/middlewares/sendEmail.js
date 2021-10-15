@@ -6,7 +6,6 @@ async function sendEmail(req, res) {
     const id = req.body.userid;
     let USER = await user.findOne({ where: { id: id } });
     let email = USER.email;
-    console.log('>>>>>>>>', email);
     let transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
         port: 587,
