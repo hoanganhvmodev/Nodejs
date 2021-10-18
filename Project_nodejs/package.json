@@ -6,9 +6,9 @@
     "scripts": {
         "tests": "echo \"Error: no test specified\" && exit 1",
         "start": "nodemon server.js",
-        "test_form": "mocha --timeout 15000 test/test_form.js",
-        "test_auth": "mocha --timeout 15000 test/test_auth.js",
-        "test_employee": "mocha --timeout 15000 test/test_employee.js",
+        "test_form": "mocha --timeout 10000 test/test_form.js",
+        "test_auth": "mocha --timeout 10000 test/test_auth.js",
+        "test_employee": "mocha --timeout 10000 test/test_employee.js",
         "test_role_permission": "mocha --timeout 15000 test/test_role_permission.js"
     },
     "keywords": [
@@ -29,6 +29,8 @@
         "mysql2": "^2.3.0",
         "nodemailer": "^6.6.5",
         "sequelize": "^6.6.5",
+        "swagger-jsdoc": "^6.1.0",
+        "swagger-ui-express": "^4.1.6",
         "uuid": "^8.3.2",
         "winston": "^3.3.3"
     },

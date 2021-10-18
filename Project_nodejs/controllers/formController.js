@@ -42,7 +42,7 @@ class formController {
             res.status(200).json({
                 status: 'success',
                 result: data.length,
-                data: { data }
+                Form: { data }
             })
         } catch (err) {
             res.json(err);
@@ -65,7 +65,7 @@ class formController {
             res.status(200).json({
                 status: 'success',
                 result: data.length,
-                data: { data }
+                Form: { data }
             })
         } catch (err) {
             res.json(err);
@@ -283,15 +283,17 @@ class formController {
         let t = await db.dataBase.transaction();
         const id = req.params.id;
         try {
+            let formDB = await form.findOne({
+                where: { id: id }
+            }, { transaction: t })
+            await formDetail.destroy({
+                where: {
+                    formid: formDB.id
+                },
+            }, { transaction: t });
             await form.destroy({
                 where: {
                     id: id,
-                },
-            }, { transaction: t });
-            let FormDetail = req.body.formDetail;
-            await formDetail.destroy({
-                where: {
-                    id: FormDetail.id,
                 },
             }, { transaction: t });
             await t.commit();

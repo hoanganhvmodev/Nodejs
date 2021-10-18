@@ -49,7 +49,7 @@ class authentication {
         };
     };
 
-    //getForm = admin Drirector Manager HR
+    //getForm = admin Drirector Manager HR Employee
     async getFormUser(req, res, next) {
         //get user_role
         let User_role = await user_role.findAll({ where: { userid: req.Userid } });

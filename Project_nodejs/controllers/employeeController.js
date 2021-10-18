@@ -41,7 +41,7 @@ class employeeController {
         const body = req.body;
         body['id'] = uuidv4();
         try {
-            const Employee = await employee.create({...req.body, avatar: req.file.filename, userid: req.Userid });
+            const Employee = await employee.create({...req.body, avatar: req.file.filename, userid: req.Userid }, { returning: true });
             res.status(200).json({
                 status: 'success',
                 data: { Employee }

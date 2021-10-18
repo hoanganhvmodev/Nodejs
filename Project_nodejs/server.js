@@ -8,7 +8,10 @@ const authRoute = require('./routes/authRoute');
 const formRoute = require('./routes/formRoute');
 const employeeRoute = require('./routes/employeeRoute');
 const role_permissionRoute = require('./routes/role_permissionRoute');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const express = require('express');
+const { formReq } = require('./schema/req');
 //use express
 const app = express();
 
@@ -17,6 +20,44 @@ app.use(cors());
 
 //Body parser
 app.use(express.json());
+
+//Swagger API
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: "3.0.1",
+        info: {
+            title: 'Express Docs API',
+            description: 'Docs API information',
+            contact: {
+                name: 'API Docs'
+            },
+        },
+        servers: [{
+            url: 'http://localhost:5000/api/v1',
+            description: 'Deverlopment'
+        }],
+        //route/*js
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+            formData: {
+                ...formReq
+            }
+        },
+        security: [{
+            bearerAuth: [],
+        }],
+
+    },
+    apis: ['server.js', './routes/*.js']
+}
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //Mount the route
 app.use(authRoute);

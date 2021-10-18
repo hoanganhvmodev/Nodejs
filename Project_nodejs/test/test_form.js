@@ -2,6 +2,8 @@ process.env.TEST = true;
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../server');
+let should = chai.should();
+let token = require('./token.json');
 
 chai.use(chaiHttp);
 //Our parent block
@@ -11,215 +13,180 @@ describe('FORM', () => {
         done();
     });
 
-    // test get all form
+    // test Admin get all form
     describe('/GET Form', () => {
-        it('it should GET all the Form', (done) => {
-            chai.request(app)
+        it('Admin GET all the Form', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/form/AllForm')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.Admin)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
         });
     });
 
-    //test get one form
+    // test Drirector get all form
+    describe('/GET Form', () => {
+        it('Drirector GET all the Form', async() => {
+            let res = await chai.request(app)
+                .get('/api/v1/auth/form/AllForm')
+                .set('Authorization', token.Drirector)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
+        });
+    });
+
+    // test HR get all form
+    describe('/GET Form', () => {
+        it('HR GET all the Form', async() => {
+            let res = await chai.request(app)
+                .get('/api/v1/auth/form/AllForm')
+                .set('Authorization', token.HR)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
+        });
+    });
+
+    //test Admin get one form  [Drirector,HR ]
     describe('/GET Form/:id', () => {
-        it('it should GET the Form', (done) => {
-            chai.request(app)
-                .get('/api/v1/auth/form/44ee1926-2ef3-4448-b978-04c0d6e3035d')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id');
-                    res.body.should.have.property('userid');
-                    res.body.should.have.property('content');
-                    res.body.should.have.property('status');
-                    res.body.should.have.property('dueDate');
-                    res.body.should.have.property('isDeleted');
-                    res.body.should.have.property('createBy');
-                    res.body.should.have.property('createAt');
-                    res.body.should.have.property('updateAt');
-                    res.body.should.have.property('updateaBy');
-                    res.body.should.have.property('complete');
-                    res.body.should.have.property('reject');
-                    res.body.should.have.property('title');
-                    res.body.should.have.property('type');
-                });
-            done();
+        it('Admin GET the Form', async() => {
+            let res = await chai.request(app)
+                .get('/api/v1/auth/form/ca987d09-f3f4-41b0-b730-c709567e46da')
+                .set('Authorization', token.Admin)
+            res.should.have.status(200);
+            res.body.data.Form.should.have.property('id');
+            res.body.data.Form.should.have.property('userid');
+            res.body.data.Form.should.have.property('content');
+            res.body.data.Form.should.have.property('status');
+            res.body.data.Form.should.have.property('dueDate');
         });
     });
 
-    //test uer get form
+    //test uer get form [Admin,Drirector,HR,Manager]
     describe('/GET Form User', () => {
-        it('it should GET all the Form User', (done) => {
-            chai.request(app)
+        it('Employee GET all the Form User', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/form/user')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.Employee)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
+
         });
     });
 
-    //test manager get form
-    describe('/GET Form Manager', () => {
-        it('it should GET all the Form Manager', (done) => {
-            chai.request(app)
+    //test Manager get form Manager
+    describe('/GET Form User', () => {
+        it('MAnager GET all the Form User', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/form/manager')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.Manager)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
+
         });
     });
 
-    //test manager update form
-    describe('/PUT Form Mnager', () => {
-        it('it should update the Form Manager', (done) => {
-            let manager = {
-                "complete": 1,
-                "reject": 0,
-            }
-            chai.request(app)
-                .put('/api/v1/auth/manager/ca987d09-f3f4-41b0-b730-c709567e46da')
-                .send(manager)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                });
-            done();
-        });
-    });
 
     //test HR get form
     describe('/GET Form HR', () => {
-        it('it should GET all the Form HR', (done) => {
-            chai.request(app)
+        it('HR GET all the Form HR', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/form/HR')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.HR)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.data.Form.should.be.a('array');
         });
     });
 
-    //test HR update form
-    describe('/PUT Form HR', () => {
-        it('it should update the Form HR', (done) => {
-            let HR = {
-                "status": "close"
-            }
-            chai.request(app)
-                .put('/api/v1/auth/HR/ca987d09-f3f4-41b0-b730-c709567e46da')
-                .send(HR)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                });
-            done();
-        });
-    });
 
-    //test view form thu viec
+    //test Admin view form thu viec
     describe('/GET View Form TV', () => {
-        it('it should GET all View Form TV', (done) => {
-            chai.request(app)
+        it('Admin GET all View Form TV', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/formTV')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.Admin)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.Form.data.should.be.a('array');
         });
     });
 
-    //test view form danh gia
+    //test Admin view form danh gia
     describe('/GET View Form DG', () => {
-        it('it should GET all View Form DG', (done) => {
-            chai.request(app)
+        it('Admin GET all View Form DG', async() => {
+            let res = await chai.request(app)
                 .get('/api/v1/auth/formDG')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    res.body.should.be.a('array');
-                });
-            done();
+                .set('Authorization', token.Admin)
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.Form.data.should.be.a('array');
         });
     });
 
 
 
-    //test create form
+    //test Admin create form
     describe('/POST form', () => {
-        it('it should create the form', (done) => {
+        it('Admin create the form', async() => {
             let form = {
-                "title": "FORM THU VIEC",
+                "title": "FORM DANH GIA",
                 "type": 0,
-                "userid": "dcf9d547-d52e-4ce2-951e-3e0eb2406645",
+                "userid": "70c439fd-13fe-4654-b89f-f936b766d704",
                 "content": "new form",
                 "status": "new",
                 "dueDate": "2021-10-20",
                 "isDeleted": 0,
                 "createBy": "Admin",
-                "createAt": Date.now(),
-                "updateAt": Date.now(),
                 "updateaBy": "Admin",
-            }
-            chai.request(app)
+                "formDetail": {
+                    "content": "form",
+                    "managerComment": "",
+                    "isDeleted": 0,
+                    "createBy": "Admin",
+                    "updateaBy": "Admin"
+                }
+            };
+            let res = await chai.request(app)
                 .post('/api/v1/auth/form')
+                .set('Authorization', token.Admin)
                 .send(form)
-                .end((err, res) => {
-                    res.should.have.status(500);
-                });
-            done();
+            res.should.have.status(200);
         });
     });
 
 
-    //test update form
+    //test Admin update form
     describe('/PUT Form', () => {
-        it('it should update the Form', (done) => {
+        it('Admin update the Form', async() => {
             let form = {
-                "title": "FORM THU VIEC",
-                "type": 0,
-                "content": "new form",
-                "status": "new",
-                "dueDate": "2021-10-20",
-                "isDeleted": 0,
-                "createBy": "Admin",
-                "createAt": Date.now(),
-                "updateAt": Date.now(),
-                "updateaBy": "Admin",
+                "content": "hello",
+                "status": "submitted",
+                "formDetail": {
+                    "content": "hello"
+                }
             }
-            chai.request(app)
-                .put('/api/v1/auth/form/44ee1926-2ef3-4448-b978-04c0d6e3035d')
+            let res = await chai.request(app)
+                .put('/api/v1/auth/form/user/14f8af1f-2128-4bea-ba88-d39be6f447d5')
+                .set('Authorization', token.Admin)
                 .send(form)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                });
-            done();
+            res.should.have.status(200);
         });
     });
 
-    //test delete form
-    describe('/DELETE/:id Form', () => {
-        it('it should DELETE a form given the id', (done) => {
-            let id = '44ee1926-2ef3-4448-b978-04c0d6e3035d';
-            chai.request(app)
-                .delete('/api/v1/auth/form/' + id)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                });
-            done();
-        });
-    });
-
+    //test delete form > su dung se xoa truc tiep db nen comment
+    // describe('/DELETE/:id Form', () => {
+    //     it('it should DELETE a form given the id', async() => {
+    //         let id = '44ee1926-2ef3-4448-b978-04c0d6e3035d';
+    //         let res = await chai.request(app)
+    //             .delete('/api/v1/auth/form/' + id)
+    //             .set('Authorization', token.Admin)
+    //         res.should.have.status(200);
+    //     });
+    // });
 
 });
