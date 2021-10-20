@@ -4,7 +4,6 @@ const logger = require('../loggers/dev_logger');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const authroziretion = require('../middlewares/authorization');
 
 class authController {
 
